@@ -1,8 +1,13 @@
 // app.js
 const express = require('express');
 const userRoutes = require('./routes/userRoutes');
-
+const path = require('path');
 const app = express();
+
+app.set('views', path.join(__dirname, 'views'));
+
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
 
 // Use JSON middleware
 app.use(express.json());
