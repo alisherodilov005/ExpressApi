@@ -1,11 +1,12 @@
 // controllers/userController.js
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 // Controller function to get all users
 async function getAllUsers(req, res) {
   try {
     const users = await User.findAll();
-    res.json(users);
+    res.render('users/index', { user:users });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -28,15 +29,13 @@ async function getUserById(req, res) {
 
 // Controller function to create a new user
 async function createUser(req, res) {
-    const { firstName, lastName } = req.body;
+    const { name, email , password } = req.body;
     
-    // Validate that firstName is present and not empty
-    if (!firstName) {
-      return res.status(400).json({ message: "First name is required" });
-    }
-  
+    const salt = await bcrypt.genSalt(10);
     try {
-      const newUser = await User.create({ firstName, lastName });
+      const hashedPassword = await bcrypt.hash(password, salt);
+    
+      const newUser = await User.create({ "name":name, "email":email , "password":hashedPassword });
       res.status(201).json(newUser);
     } catch (error) {
       res.status(400).json({ message: error.message });

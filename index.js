@@ -1,8 +1,10 @@
 // app.js
 const express = require('express');
+const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const path = require('path');
 const app = express();
+const expressLayouts = require("express-ejs-layouts");
 
 app.set('views', path.join(__dirname, 'views'));
 
@@ -11,9 +13,10 @@ app.set('view engine', 'ejs');
 
 // Use JSON middleware
 app.use(express.json());
-
+app.use(expressLayouts);
 // Use user routes
 app.use('/api', userRoutes);
+app.use('/api/auth', authRoutes);
 
 // Start server
 const PORT = process.env.PORT || 3000;
